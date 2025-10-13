@@ -265,7 +265,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         if (socialProvider == OAuthProvider.google && coloredBg) {
           iconWidget = Image.asset(
             'assets/logos/google_light.png',
-            package: 'supabase_auth_ui',
+            package: 'matam_supabase_auth_ui',
             width: 48,
             height: 48,
           );
@@ -278,7 +278,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           case OAuthProvider.notion:
             iconWidget = Image.asset(
               'assets/logos/notion.png',
-              package: 'supabase_auth_ui',
+              package: 'matam_supabase_auth_ui',
               width: 48,
               height: 48,
             );
@@ -286,7 +286,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           case OAuthProvider.kakao:
             iconWidget = Image.asset(
               'assets/logos/kakao.png',
-              package: 'supabase_auth_ui',
+              package: 'matam_supabase_auth_ui',
               width: 48,
               height: 48,
             );
@@ -294,7 +294,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           case OAuthProvider.keycloak:
             iconWidget = Image.asset(
               'assets/logos/keycloak.png',
-              package: 'supabase_auth_ui',
+              package: 'matam_supabase_auth_ui',
               width: 48,
               height: 48,
             );
@@ -302,7 +302,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           case OAuthProvider.workos:
             iconWidget = Image.asset(
               'assets/logos/workOS.png',
-              package: 'supabase_auth_ui',
+              package: 'matam_supabase_auth_ui',
               color: coloredBg ? Colors.white : null,
               width: 48,
               height: 48,
