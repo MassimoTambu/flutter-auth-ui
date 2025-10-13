@@ -1,4 +1,4 @@
-name: supabase_auth_ui
+name: matam_supabase_auth_ui
 description: UI library to implement auth forms using Supabase and Flutter
 version: 0.5.5
 homepage: https://supabase.com

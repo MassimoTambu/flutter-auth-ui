@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 /// UI component to create a phone + password signin/ signup form
 class SupaPhoneAuth extends StatefulWidget {

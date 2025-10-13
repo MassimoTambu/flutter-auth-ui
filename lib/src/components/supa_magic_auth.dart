@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/localizations/supa_magic_auth_localization.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/src/localizations/supa_magic_auth_localization.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create magic link login form

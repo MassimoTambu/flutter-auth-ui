@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/localizations/supa_verify_phone_localization.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/src/localizations/supa_verify_phone_localization.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component for verifying phone number

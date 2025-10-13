@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/localizations/supa_email_auth_localization.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/src/localizations/supa_email_auth_localization.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// {@template metadata_field}
@@ -243,10 +243,10 @@ class SupaEmailAuth extends StatefulWidget {
   });
 
   @override
-  State<SupaEmailAuth> createState() => _SupaEmailAuthState();
+  State<SupaEmailAuth> createState() => SupaEmailAuthState();
 }
 
-class _SupaEmailAuthState extends State<SupaEmailAuth> {
+class SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -287,6 +287,15 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
       }
     }
     super.dispose();
+  }
+
+  void toggleSignIn() {
+    setState(() {
+      _isRecoveringPassword = false;
+      _isSigningIn = !_isSigningIn;
+    });
+    widget.onToggleSignIn?.call(_isSigningIn);
+    widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
   }
 
   @override
@@ -490,14 +499,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               ],
               TextButton(
                 key: const ValueKey('toggleSignInButton'),
-                onPressed: () {
-                  setState(() {
-                    _isRecoveringPassword = false;
-                    _isSigningIn = !_isSigningIn;
-                  });
-                  widget.onToggleSignIn?.call(_isSigningIn);
-                  widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
-                },
+                onPressed: () => toggleSignIn(),
                 child: Text(_isSigningIn
                     ? localization.dontHaveAccount
                     : localization.haveAccount),

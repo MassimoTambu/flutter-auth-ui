@@ -1,4 +1,4 @@
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 class SupaSocialsAuthLocalization {
   final String successSignInMessage;
