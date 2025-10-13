@@ -347,8 +347,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         if (socialProvider == OAuthProvider.google && coloredBg) {
           iconWidget = Image.asset(
             'assets/logos/google_light.png',
-            package: 'supabase_auth_ui',
             semanticLabel: socialProvider.displayName,
+            package: 'matam_supabase_auth_ui',
             width: 48,
             height: 48,
           );
@@ -357,7 +357,41 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           overlayColor = Colors.white;
         }
 
-        Future<void> onAuthButtonPressed() async {
+        switch (socialProvider) {
+          case OAuthProvider.notion:
+            iconWidget = Image.asset(
+              'assets/logos/notion.png',
+              package: 'matam_supabase_auth_ui',
+              width: 48,
+              height: 48,
+            );
+          case OAuthProvider.kakao:
+            iconWidget = Image.asset(
+              'assets/logos/kakao.png',
+              package: 'matam_supabase_auth_ui',
+              width: 48,
+              height: 48,
+            );
+          case OAuthProvider.keycloak:
+            iconWidget = Image.asset(
+              'assets/logos/keycloak.png',
+              package: 'matam_supabase_auth_ui',
+              width: 48,
+              height: 48,
+            );
+          case OAuthProvider.workos:
+            iconWidget = Image.asset(
+              'assets/logos/workOS.png',
+              package: 'matam_supabase_auth_ui',
+              color: coloredBg ? Colors.white : null,
+              width: 48,
+              height: 48,
+            );
+          default:
+            break;
+        }
+
+        onAuthButtonPressed() async {
           try {
             // Check if native Google login should be performed
             if (socialProvider == OAuthProvider.google) {
