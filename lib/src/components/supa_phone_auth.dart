@@ -1,13 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
-import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:matam_supabase_auth_ui/src/components/supa_password_field.dart';
+import 'package:matam_supabase_auth_ui/src/l10n/l10n_extension.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 /// UI component to create a phone + password signin/ signup form
 class SupaPhoneAuth extends StatefulWidget {
+  const SupaPhoneAuth({
+    super.key,
+    required this.authAction,
+    required this.onSuccess,
+    this.onError,
+    this.showSnackBars = true,
+    this.enableAutomaticFormSubmission = true,
+  });
+
   /// Whether the user is sining in or signin up
   final SupaAuthAction authAction;
 
@@ -28,15 +37,6 @@ class SupaPhoneAuth extends StatefulWidget {
   ///
   /// Defaults to `true` for backward compatibility.
   final bool enableAutomaticFormSubmission;
-
-  const SupaPhoneAuth({
-    super.key,
-    required this.authAction,
-    required this.onSuccess,
-    this.onError,
-    this.showSnackBars = true,
-    this.enableAutomaticFormSubmission = true,
-  });
 
   @override
   State<SupaPhoneAuth> createState() => _SupaPhoneAuthState();

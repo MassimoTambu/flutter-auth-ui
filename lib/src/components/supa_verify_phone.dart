@@ -1,12 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/src/l10n/l10n_extension.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component for verifying phone number
 class SupaVerifyPhone extends StatefulWidget {
+  const SupaVerifyPhone({
+    super.key,
+    required this.onSuccess,
+    this.onError,
+    this.showSnackBars = true,
+  });
+
   /// Method to be called when the auth action is success
   final void Function(AuthResponse response) onSuccess;
 
@@ -15,13 +22,6 @@ class SupaVerifyPhone extends StatefulWidget {
 
   /// Whether to show snack bars
   final bool showSnackBars;
-
-  const SupaVerifyPhone({
-    super.key,
-    required this.onSuccess,
-    this.onError,
-    this.showSnackBars = true,
-  });
 
   @override
   State<SupaVerifyPhone> createState() => _SupaVerifyPhoneState();

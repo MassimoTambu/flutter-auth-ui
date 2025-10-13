@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 import '../test_utils.dart';
 

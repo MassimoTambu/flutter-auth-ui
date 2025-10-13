@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 import '../test_utils.dart';
 
@@ -11,10 +11,10 @@ void main() {
   Widget buildForm({
     void Function(AuthResponse response)? onSignInComplete,
     void Function(AuthResponse response)? onSignUpComplete,
-    void Function(Object error)? onError,
+    void Function(Object error, String email)? onError,
     void Function(bool isSigningIn)? onToggleSignIn,
     void Function(bool isRecoveringPassword)? onToggleRecoverPassword,
-    void Function(String email)? onPasswordResetEmailSent,
+    void Function()? onPasswordResetEmailSent,
     bool isInitiallySigningIn = true,
     bool showConfirmPasswordField = false,
     bool useOtpForPasswordRecovery = false,
@@ -209,7 +209,7 @@ void main() {
 
     testWidgets('forwards the error to onError when provided', (tester) async {
       Object? captured;
-      await tester.pumpWidget(buildForm(onError: (e) => captured = e));
+      await tester.pumpWidget(buildForm(onError: (e, email) => captured = e));
       testServer.responder = (_) =>
           errorResponse('Invalid login credentials', statusCode: 400);
 

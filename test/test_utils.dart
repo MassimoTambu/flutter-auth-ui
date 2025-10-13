@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 /// In-memory implementation of [GotrueAsyncStorage] so the PKCE storage never
 /// reaches for shared preferences during tests.

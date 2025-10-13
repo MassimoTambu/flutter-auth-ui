@@ -2,12 +2,21 @@ import 'dart:async';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/src/l10n/l10n_extension.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create magic link login form
 class SupaMagicAuth extends StatefulWidget {
+  const SupaMagicAuth({
+    super.key,
+    this.redirectUrl,
+    required this.onSuccess,
+    this.onError,
+    this.showSnackBars = true,
+    this.enableAutomaticFormSubmission = true,
+  });
+
   /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
   ///
   /// Typically used to pass a DeepLink
@@ -30,15 +39,6 @@ class SupaMagicAuth extends StatefulWidget {
   ///
   /// Defaults to `true` for backward compatibility.
   final bool enableAutomaticFormSubmission;
-
-  const SupaMagicAuth({
-    super.key,
-    this.redirectUrl,
-    required this.onSuccess,
-    this.onError,
-    this.showSnackBars = true,
-    this.enableAutomaticFormSubmission = true,
-  });
 
   @override
   State<SupaMagicAuth> createState() => _SupaMagicAuthState();

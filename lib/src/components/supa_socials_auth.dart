@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/src/l10n/l10n_extension.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 extension on OAuthProvider {
@@ -80,6 +80,11 @@ enum SocialButtonVariant {
 }
 
 class NativeGoogleAuthConfig {
+  const NativeGoogleAuthConfig({
+    this.webClientId,
+    this.iosClientId,
+  });
+
   /// Web Client ID that you registered with Google Cloud.
   ///
   /// Required to perform native Google Sign In on Android
@@ -89,15 +94,29 @@ class NativeGoogleAuthConfig {
   ///
   /// Required to perform native Google Sign In on iOS
   final String? iosClientId;
-
-  const NativeGoogleAuthConfig({
-    this.webClientId,
-    this.iosClientId,
-  });
 }
 
 /// UI Component to create social login form
 class SupaSocialsAuth extends StatefulWidget {
+  const SupaSocialsAuth({
+    super.key,
+    this.nativeGoogleAuthConfig,
+    this.enableNativeAppleAuth = true,
+    required this.socialProviders,
+    this.colored = true,
+    this.redirectUrl,
+    required this.onSuccess,
+    this.onError,
+    this.socialButtonVariant = SocialButtonVariant.iconAndText,
+    this.spacing = 16.0,
+    this.showSnackBars = true,
+    this.showSuccessSnackBar = true,
+    this.scopes,
+    this.queryParams,
+    this.oAuthButtonLabels,
+    this.authScreenLaunchMode = LaunchMode.platformDefault,
+  });
+
   /// Defines native google provider to show in the form
   final NativeGoogleAuthConfig? nativeGoogleAuthConfig;
 
@@ -166,25 +185,6 @@ class SupaSocialsAuth extends StatefulWidget {
 
   /// Custom LaunchMode support
   final LaunchMode authScreenLaunchMode;
-
-  const SupaSocialsAuth({
-    super.key,
-    this.nativeGoogleAuthConfig,
-    this.enableNativeAppleAuth = true,
-    required this.socialProviders,
-    this.colored = true,
-    this.redirectUrl,
-    required this.onSuccess,
-    this.onError,
-    this.socialButtonVariant = SocialButtonVariant.iconAndText,
-    this.spacing = 16.0,
-    this.showSnackBars = true,
-    this.showSuccessSnackBar = true,
-    this.scopes,
-    this.queryParams,
-    this.oAuthButtonLabels,
-    this.authScreenLaunchMode = LaunchMode.platformDefault,
-  });
 
   @override
   State<SupaSocialsAuth> createState() => _SupaSocialsAuthState();

@@ -1,9 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
-import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:matam_supabase_auth_ui/src/components/supa_password_field.dart';
+import 'package:matam_supabase_auth_ui/src/l10n/l10n_extension.dart';
+import 'package:matam_supabase_auth_ui/src/utils/constants.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 /// {@template metadata_field}
 /// Information about the metadata to pass to the signup form
@@ -22,6 +22,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// ```
 /// {@endtemplate}
 class MetaDataField {
+  /// {@macro metadata_field}
+  MetaDataField({
+    required this.label,
+    required this.key,
+    this.validator,
+    this.prefixIcon,
+  });
+
   /// Label of the `TextFormField` for this metadata
   final String label;
 
@@ -33,14 +41,6 @@ class MetaDataField {
 
   /// Icon to show as the prefix icon in TextFormField
   final Icon? prefixIcon;
-
-  /// {@macro metadata_field}
-  const MetaDataField({
-    required this.label,
-    required this.key,
-    this.validator,
-    this.prefixIcon,
-  });
 }
 
 /// {@template boolean_metadata_field}
@@ -91,6 +91,21 @@ class MetaDataField {
 /// must check the checkbox in order to sign up.
 /// {@endtemplate}
 class BooleanMetaDataField extends MetaDataField {
+  /// {@macro boolean_metadata_field}
+  BooleanMetaDataField({
+    String? label,
+    this.value = false,
+    this.richLabelSpans,
+    this.checkboxSemanticLabel,
+    this.isRequired = false,
+    this.checkboxPosition = ListTileControlAffinity.platform,
+    required super.key,
+  }) : assert(
+         label != null || richLabelSpans != null,
+         'Either label or richLabelSpans must be provided',
+       ),
+       super(label: label ?? '');
+
   /// Whether the checkbox is initially checked.
   final bool value;
 
@@ -110,21 +125,6 @@ class BooleanMetaDataField extends MetaDataField {
 
   /// Semantic label for the checkbox.
   final String? checkboxSemanticLabel;
-
-  /// {@macro boolean_metadata_field}
-  BooleanMetaDataField({
-    String? label,
-    this.value = false,
-    this.richLabelSpans,
-    this.checkboxSemanticLabel,
-    this.isRequired = false,
-    this.checkboxPosition = ListTileControlAffinity.platform,
-    required super.key,
-  }) : assert(
-         label != null || richLabelSpans != null,
-         'Either label or richLabelSpans must be provided',
-       ),
-       super(label: label ?? '');
 
   Widget getLabelWidget(BuildContext context) {
     // This matches the default style of [TextField], to match the other fields
@@ -162,6 +162,34 @@ typedef MetadataController = Object;
 /// ```
 /// {@endtemplate}
 class SupaEmailAuth extends StatefulWidget {
+  /// {@macro supa_email_auth}
+  const SupaEmailAuth({
+    super.key,
+    this.autofocus = true,
+    this.redirectTo,
+    this.resetPasswordRedirectTo,
+    this.passwordValidator,
+    required this.onSignInComplete,
+    required this.onSignUpComplete,
+    this.onPasswordResetEmailSent,
+    this.onError,
+    this.onToggleSignIn,
+    this.onToggleRecoverPassword,
+    this.metadataFields,
+    this.extraMetadata,
+    this.isInitiallySigningIn = true,
+    this.prefixIconEmail = const Icon(Icons.email),
+    this.prefixIconPassword = const Icon(Icons.lock),
+    this.prefixIconOtp = const Icon(Icons.security),
+    this.showConfirmPasswordField = false,
+    this.showSnackBars = true,
+    this.useOtpForPasswordRecovery = false,
+    this.prefilledEmail,
+    this.prefilledPassword,
+    this.enableAutomaticFormSubmission = true,
+    this.customForgotPasswordAction,
+  });
+
   /// Whether the email field should automatically focus when the form is shown
   final bool autofocus;
 
@@ -190,15 +218,13 @@ class SupaEmailAuth extends StatefulWidget {
   final void Function(AuthResponse response) onSignUpComplete;
 
   /// Callback for sending the password reset email
-  ///
-  /// The [email] the reset was requested for is passed back so it can be
-  /// reused, for example to verify an OTP for that same email.
-  final void Function(String email)? onPasswordResetEmailSent;
+  final void Function()? onPasswordResetEmailSent;
 
   /// Callback for when the auth action threw an exception
   ///
   /// If set to `null`, a snack bar with error color will show up.
-  final void Function(Object error)? onError;
+  /// email field is sent for convenience.
+  final void Function(Object error, String email)? onError;
 
   /// Callback for toggling between sign in and sign up
   final void Function(bool isSigningIn)? onToggleSignIn;
@@ -247,32 +273,7 @@ class SupaEmailAuth extends StatefulWidget {
   /// Defaults to `true` for backward compatibility.
   final bool enableAutomaticFormSubmission;
 
-  /// {@macro supa_email_auth}
-  const SupaEmailAuth({
-    super.key,
-    this.autofocus = true,
-    this.redirectTo,
-    this.resetPasswordRedirectTo,
-    this.passwordValidator,
-    required this.onSignInComplete,
-    required this.onSignUpComplete,
-    this.onPasswordResetEmailSent,
-    this.onError,
-    this.onToggleSignIn,
-    this.onToggleRecoverPassword,
-    this.metadataFields,
-    this.extraMetadata,
-    this.isInitiallySigningIn = true,
-    this.prefixIconEmail = const Icon(Icons.email),
-    this.prefixIconPassword = const Icon(Icons.lock),
-    this.prefixIconOtp = const Icon(Icons.security),
-    this.showConfirmPasswordField = false,
-    this.showSnackBars = true,
-    this.useOtpForPasswordRecovery = false,
-    this.prefilledEmail,
-    this.prefilledPassword,
-    this.enableAutomaticFormSubmission = true,
-  });
+  final void Function()? customForgotPasswordAction;
 
   @override
   State<SupaEmailAuth> createState() => _SupaEmailAuthState();
@@ -302,9 +303,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   /// Controller for confirm new password input field
   final _confirmNewPasswordController = TextEditingController();
-
-  /// Whether the user is entering OTP code
-  bool _isEnteringOtp = false;
 
   @override
   void initState() {
@@ -340,6 +338,15 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
       }
     }
     super.dispose();
+  }
+
+  void _toggleSignIn() {
+    setState(() {
+      _isRecoveringPassword = false;
+      _isSigningIn = !_isSigningIn;
+    });
+    widget.onToggleSignIn?.call(_isSigningIn);
+    widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
   }
 
   @override
@@ -532,9 +539,13 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       ),
               ),
               spacer(16),
-              if (_isSigningIn)
+              if (_isSigningIn) ...[
                 TextButton(
                   onPressed: () {
+                    if (widget.customForgotPasswordAction != null) {
+                      widget.customForgotPasswordAction!();
+                      return;
+                    }
                     setState(() {
                       _isRecoveringPassword = true;
                     });
@@ -542,16 +553,10 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   },
                   child: Text(localization.forgotPassword),
                 ),
+              ],
               TextButton(
                 key: const ValueKey('toggleSignInButton'),
-                onPressed: () {
-                  setState(() {
-                    _isRecoveringPassword = false;
-                    _isSigningIn = !_isSigningIn;
-                  });
-                  widget.onToggleSignIn?.call(_isSigningIn);
-                  widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
-                },
+                onPressed: () => _toggleSignIn(),
                 child: Text(
                   _isSigningIn
                       ? localization.dontHaveAccount
@@ -561,77 +566,16 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             ],
             if (_isSigningIn && _isRecoveringPassword) ...[
               spacer(16),
-              if (!_isEnteringOtp)
-                ElevatedButton(
-                  onPressed: _passwordRecovery,
-                  child: Text(localization.sendPasswordReset),
-                )
-              else ...[
-                TextFormField(
-                  controller: _otpController,
-                  decoration: InputDecoration(
-                    label: Text(localization.enterOtpCode),
-                    prefixIcon: widget.prefixIconOtp,
-                  ),
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return localization.requiredFieldError;
-                    }
-                    return null;
-                  },
-                ),
-                spacer(16),
-                TextFormField(
-                  controller: _newPasswordController,
-                  decoration: InputDecoration(
-                    label: Text(localization.enterNewPassword),
-                    prefixIcon: widget.prefixIconPassword,
-                  ),
-                  obscureText: true,
-                  textInputAction: TextInputAction.next,
-                  validator:
-                      widget.passwordValidator ??
-                      defaultPasswordValidator(
-                        localization.passwordLengthError,
-                      ),
-                ),
-                spacer(16),
-                TextFormField(
-                  controller: _confirmNewPasswordController,
-                  decoration: InputDecoration(
-                    label: Text(localization.confirmPassword),
-                    prefixIcon: widget.prefixIconPassword,
-                  ),
-                  obscureText: true,
-                  textInputAction: TextInputAction.done,
-                  validator: (value) {
-                    if (value != _newPasswordController.text) {
-                      return localization.confirmPasswordError;
-                    }
-                    return null;
-                  },
-                  onFieldSubmitted: (_) {
-                    if (widget.enableAutomaticFormSubmission) {
-                      _verifyOtpAndResetPassword();
-                    }
-                  },
-                ),
-                spacer(16),
-                ElevatedButton(
-                  onPressed: _verifyOtpAndResetPassword,
-                  child: Text(localization.changePassword),
-                ),
-              ],
+              ElevatedButton(
+                onPressed: _passwordRecovery,
+                child: Text(localization.sendPasswordReset),
+              ),
               spacer(16),
               TextButton(
                 onPressed: () {
                   setState(() {
                     _isRecoveringPassword = false;
-                    _isEnteringOtp = false;
                   });
-                  widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
                 },
                 child: Text(localization.backToSignIn),
               ),
@@ -657,10 +601,10 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-        widget.onSignInComplete(response);
+        widget.onSignInComplete.call(response);
       } else {
         final user = supabase.auth.currentUser;
-        final AuthResponse response;
+        late final AuthResponse response;
         if (user?.isAnonymous == true) {
           await supabase.auth.updateUser(
             UserAttributes(
@@ -680,17 +624,25 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             data: _resolveData(),
           );
         }
-        widget.onSignUpComplete(response);
+        if (response.user != null && response.user!.emailConfirmedAt == null) {
+          _toggleSignIn();
+        }
+        widget.onSignUpComplete.call(response);
       }
+    } on AuthException catch (error) {
+      if (widget.onError == null && mounted && widget.showSnackBars) {
+        context.showErrorSnackBar(error.message);
+      } else {
+        widget.onError?.call(error, _emailController.text.trim());
+      }
+      _emailFocusNode.requestFocus();
     } catch (error) {
-      if (mounted) {
-        handleAuthError(
-          context,
-          error,
-          onError: widget.onError,
-          showSnackBars: widget.showSnackBars,
-          unexpectedErrorText: localization.unexpectedError,
+      if (widget.onError == null && mounted && widget.showSnackBars) {
+        context.showErrorSnackBar(
+          '${localization.unexpectedError}: $error',
         );
+      } else {
+        widget.onError?.call(error, _emailController.text.trim());
       }
       _emailFocusNode.requestFocus();
     }
@@ -719,77 +671,18 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         email,
         redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
       );
-      widget.onPasswordResetEmailSent?.call(email);
+      widget.onPasswordResetEmailSent?.call();
       if (!mounted) return;
       if (widget.showSnackBars) {
         context.showSnackBar(localization.passwordResetSent);
       }
       setState(() {
-        if (widget.useOtpForPasswordRecovery) {
-          _isEnteringOtp = true;
-        } else {
-          _isRecoveringPassword = false;
-        }
-      });
-      if (!widget.useOtpForPasswordRecovery) {
-        widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
-      }
-    } catch (error) {
-      widget.onError?.call(error);
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  void _verifyOtpAndResetPassword() async {
-    final localization = context.l10n;
-    try {
-      if (!_formKey.currentState!.validate()) {
-        return;
-      }
-
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        await supabase.auth.verifyOTP(
-          type: OtpType.recovery,
-          email: _emailController.text.trim(),
-          token: _otpController.text.trim(),
-        );
-      } on AuthException catch (error) {
-        if (error.code == 'otp_expired') {
-          if (!mounted) return;
-          context.showErrorSnackBar(localization.otpCodeError);
-          return;
-        } else if (error.code == 'otp_disabled') {
-          if (!mounted) return;
-          context.showErrorSnackBar(localization.otpDisabledError);
-          return;
-        }
-        rethrow;
-      }
-
-      await supabase.auth.updateUser(
-        UserAttributes(password: _newPasswordController.text),
-      );
-
-      if (!mounted) return;
-      if (widget.showSnackBars) {
-        context.showSnackBar(localization.passwordChangedSuccess);
-      }
-      setState(() {
         _isRecoveringPassword = false;
-        _isEnteringOtp = false;
       });
-      widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
+    } on AuthException catch (error) {
+      widget.onError?.call(error, _emailController.text.trim());
     } catch (error) {
-      widget.onError?.call(error);
+      widget.onError?.call(error, _emailController.text.trim());
     } finally {
       if (mounted) {
         setState(() {
