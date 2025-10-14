@@ -289,7 +289,7 @@ class SupaEmailAuthState extends State<SupaEmailAuth> {
     super.dispose();
   }
 
-  void toggleSignIn() {
+  void _toggleSignIn() {
     setState(() {
       _isRecoveringPassword = false;
       _isSigningIn = !_isSigningIn;
@@ -499,7 +499,7 @@ class SupaEmailAuthState extends State<SupaEmailAuth> {
               ],
               TextButton(
                 key: const ValueKey('toggleSignInButton'),
-                onPressed: () => toggleSignIn(),
+                onPressed: () => _toggleSignIn(),
                 child: Text(_isSigningIn
                     ? localization.dontHaveAccount
                     : localization.haveAccount),
@@ -563,6 +563,9 @@ class SupaEmailAuthState extends State<SupaEmailAuth> {
             emailRedirectTo: widget.redirectTo,
             data: _resolveData(),
           );
+        }
+        if (response.user != null && response.user!.emailConfirmedAt == null) {
+          _toggleSignIn();
         }
         widget.onSignUpComplete.call(response);
       }
