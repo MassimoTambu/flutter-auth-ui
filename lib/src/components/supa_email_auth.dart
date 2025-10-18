@@ -192,7 +192,8 @@ class SupaEmailAuth extends StatefulWidget {
   /// Callback for when the auth action threw an exception
   ///
   /// If set to `null`, a snack bar with error color will show up.
-  final void Function(Object error)? onError;
+  /// email field is sent for convenience.
+  final void Function(Object error, String email)? onError;
 
   /// Callback for toggling between sign in and sign up
   final void Function(bool isSigningIn)? onToggleSignIn;
@@ -220,6 +221,8 @@ class SupaEmailAuth extends StatefulWidget {
   /// Whether the confirm password field should be displayed
   final bool showConfirmPasswordField;
 
+  final void Function()? customForgotPasswordAction;
+
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
     super.key,
@@ -240,6 +243,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.prefixIconEmail = const Icon(Icons.email),
     this.prefixIconPassword = const Icon(Icons.lock),
     this.showConfirmPasswordField = false,
+    this.customForgotPasswordAction,
   });
 
   @override
@@ -489,6 +493,10 @@ class SupaEmailAuthState extends State<SupaEmailAuth> {
               if (_isSigningIn) ...[
                 TextButton(
                   onPressed: () {
+                    if (widget.customForgotPasswordAction != null) {
+                      widget.customForgotPasswordAction!();
+                      return;
+                    }
                     setState(() {
                       _isRecoveringPassword = true;
                     });
@@ -573,7 +581,7 @@ class SupaEmailAuthState extends State<SupaEmailAuth> {
       if (widget.onError == null && mounted) {
         context.showErrorSnackBar(error.message);
       } else {
-        widget.onError?.call(error);
+        widget.onError?.call(error, _emailController.text.trim());
       }
       _emailFocusNode.requestFocus();
     } catch (error) {
@@ -581,7 +589,7 @@ class SupaEmailAuthState extends State<SupaEmailAuth> {
         context.showErrorSnackBar(
             '${widget.localization.unexpectedError}: $error');
       } else {
-        widget.onError?.call(error);
+        widget.onError?.call(error, _emailController.text.trim());
       }
       _emailFocusNode.requestFocus();
     }
@@ -616,9 +624,9 @@ class SupaEmailAuthState extends State<SupaEmailAuth> {
         _isRecoveringPassword = false;
       });
     } on AuthException catch (error) {
-      widget.onError?.call(error);
+      widget.onError?.call(error, _emailController.text.trim());
     } catch (error) {
-      widget.onError?.call(error);
+      widget.onError?.call(error, _emailController.text.trim());
     } finally {
       if (mounted) {
         setState(() {
