@@ -77,6 +77,8 @@ class NativeGoogleAuthConfig {
   /// Required to perform native Google Sign In on iOS
   final String? iosClientId;
 
+  static final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+
   const NativeGoogleAuthConfig({
     this.webClientId,
     this.iosClientId,
@@ -154,19 +156,17 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   late final SupaSocialsAuthLocalization localization;
 
   /// Performs Google sign in on Android and iOS
-  Future<AuthResponse> _nativeGoogleSignIn({
-    required String? webClientId,
-    required String? iosClientId,
-  }) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      clientId: iosClientId,
-      serverClientId: webClientId,
-    );
+  Future<AuthResponse> _nativeGoogleSignIn(
+      {required String? webClientId, required String? iosClientId}) async {
+    await NativeGoogleAuthConfig.googleSignIn
+        .initialize(serverClientId: webClientId, clientId: iosClientId);
 
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final accessToken = googleAuth.accessToken;
-    final idToken = googleAuth.idToken;
+    final googleAuth = await NativeGoogleAuthConfig.googleSignIn.authenticate();
+    final idToken = googleAuth.authentication.idToken;
+    final authorizationClient = googleAuth.authorizationClient;
+    final authorization =
+        await authorizationClient.authorizationForScopes(['email', 'profile']);
+    final accessToken = authorization?.accessToken;
 
     if (accessToken == null) {
       throw const AuthException(
