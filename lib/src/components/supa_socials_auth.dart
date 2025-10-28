@@ -94,6 +94,8 @@ class NativeGoogleAuthConfig {
   ///
   /// Required to perform native Google Sign In on iOS
   final String? iosClientId;
+
+  static final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 }
 
 /// UI Component to create social login form
@@ -198,15 +200,19 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     required String? webClientId,
     required String? iosClientId,
   }) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
-    await googleSignIn.initialize(
-      clientId: iosClientId,
+    await NativeGoogleAuthConfig.googleSignIn.initialize(
       serverClientId: webClientId,
+      clientId: iosClientId,
     );
 
-    final googleUser = await googleSignIn.authenticate();
-    final googleAuth = googleUser.authentication;
-    final idToken = googleAuth.idToken;
+    final googleAuth = await NativeGoogleAuthConfig.googleSignIn.authenticate();
+    final idToken = googleAuth.authentication.idToken;
+    final authorizationClient = googleAuth.authorizationClient;
+    final authorization = await authorizationClient.authorizationForScopes([
+      'email',
+      'profile',
+    ]);
+    final accessToken = authorization?.accessToken;
 
     if (idToken == null) {
       throw const AuthException(
