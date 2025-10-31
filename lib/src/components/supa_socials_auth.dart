@@ -35,7 +35,7 @@ extension on OAuthProvider {
         OAuthProvider.apple => Colors.black,
         OAuthProvider.azure => Colors.blueAccent,
         OAuthProvider.bitbucket => Colors.blue,
-        OAuthProvider.discord => Colors.purple,
+        OAuthProvider.discord => const Color.fromRGBO(88, 101, 242, 1),
         OAuthProvider.facebook => const Color(0xFF3b5998),
         OAuthProvider.figma => const Color.fromRGBO(241, 77, 27, 1),
         OAuthProvider.github => Colors.black,
