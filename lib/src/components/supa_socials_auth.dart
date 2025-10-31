@@ -32,23 +32,25 @@ extension on OAuthProvider {
   };
 
   Color get btnBgColor => switch (this) {
+    OAuthProvider.apple => Colors.black,
     OAuthProvider.azure => Colors.blueAccent,
     OAuthProvider.bitbucket => Colors.blue,
-    OAuthProvider.discord => Colors.purple,
+    OAuthProvider.discord => const Color.fromRGBO(88, 101, 242, 1),
     OAuthProvider.facebook => const Color(0xFF3b5998),
     OAuthProvider.figma => const Color.fromRGBO(241, 77, 27, 1),
+    OAuthProvider.github => Colors.black,
     OAuthProvider.gitlab => Colors.deepOrange,
     OAuthProvider.google => Colors.white,
     OAuthProvider.kakao => const Color(0xFFFFE812),
     OAuthProvider.keycloak => const Color.fromRGBO(0, 138, 170, 1),
-    OAuthProvider.linkedin ||
-    OAuthProvider.linkedinOidc => const Color.fromRGBO(0, 136, 209, 1),
+    OAuthProvider.linkedin => const Color.fromRGBO(0, 136, 209, 1),
     OAuthProvider.notion => const Color.fromRGBO(69, 75, 78, 1),
-    OAuthProvider.slack ||
-    OAuthProvider.slackOidc => const Color.fromRGBO(74, 21, 75, 1),
+    OAuthProvider.slack => const Color.fromRGBO(74, 21, 75, 1),
     OAuthProvider.spotify => Colors.green,
     OAuthProvider.twitch => Colors.purpleAccent,
+    OAuthProvider.twitter => Colors.black,
     OAuthProvider.workos => const Color.fromRGBO(99, 99, 241, 1),
+    // ignore: unreachable_switch_case
     _ => Colors.black,
   };
 
