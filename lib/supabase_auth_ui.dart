@@ -1,3 +1,5 @@
+library;
+
 export 'src/components/supa_email_auth.dart';
 export 'src/components/supa_magic_auth.dart';
 export 'src/components/supa_reset_password.dart';

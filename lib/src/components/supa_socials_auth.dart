@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -106,6 +107,7 @@ class SupaSocialsAuth extends StatefulWidget {
     super.key,
     this.nativeGoogleAuthConfig,
     this.enableNativeAppleAuth = true,
+    this.enableNativeFacebookAuth = true,
     required this.socialProviders,
     this.colored = true,
     this.redirectUrl,
@@ -126,6 +128,9 @@ class SupaSocialsAuth extends StatefulWidget {
 
   /// Whether to use native Apple sign in on iOS and macOS
   final bool enableNativeAppleAuth;
+
+  /// Whether to use native Facebook sign in on iOS and macOS
+  final bool enableNativeFacebookAuth;
 
   /// List of social providers to show in the form
   final List<OAuthProvider> socialProviders;
@@ -278,6 +283,26 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     return response;
   }
 
+  /// Performs Facebook sign in on Android and iOS
+  Future<AuthResponse> _nativeFacebookSignIn() async {
+    final LoginResult result = await FacebookAuth.instance
+        .login(); // by default we request the email and the public profile
+    if (result.status == LoginStatus.success && result.accessToken != null) {
+      // you are logged
+      final AccessToken accessToken = result.accessToken!;
+
+      return supabase.auth.signInWithIdToken(
+        provider: OAuthProvider.facebook,
+        idToken: accessToken.tokenString,
+      );
+    } else {
+      throw AuthException(
+        'Facebook sign in failed. ${result.message}',
+        statusCode: result.status.name,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -312,7 +337,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     final providers = widget.socialProviders;
     final googleAuthConfig = widget.nativeGoogleAuthConfig;
     final isNativeAppleAuthEnabled = widget.enableNativeAppleAuth;
-    final coloredBg = widget.colored;
+    final isNativeFacebookAuthEnabled = widget.enableNativeFacebookAuth;
+    final coloredBg = widget.colored == true;
 
     if (providers.isEmpty) {
       return ErrorWidget(Exception('Social provider list cannot be empty'));
@@ -430,6 +456,15 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                       defaultTargetPlatform == TargetPlatform.macOS);
               if (shouldPerformNativeAppleSignIn) {
                 await _nativeAppleSignIn();
+                return;
+              }
+            }
+
+            if (socialProvider == OAuthProvider.facebook) {
+              final shouldPerformNativeFacebookSignIn =
+                  isNativeFacebookAuthEnabled && !kIsWeb;
+              if (shouldPerformNativeFacebookSignIn) {
+                await _nativeFacebookSignIn();
                 return;
               }
             }
