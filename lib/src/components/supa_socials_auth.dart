@@ -150,7 +150,8 @@ class SupaSocialsAuth extends StatefulWidget {
     this.queryParams,
     this.localization = const SupaSocialsAuthLocalization(),
     this.authScreenLaunchMode = LaunchMode.platformDefault,
-  });
+  }) : assert(enableNativeFacebookAuth == false,
+            'Facebook native auth doesn\'t work in Supabase. See: https://github.com/supabase/auth/issues/1522');
 
   @override
   State<SupaSocialsAuth> createState() => _SupaSocialsAuthState();
