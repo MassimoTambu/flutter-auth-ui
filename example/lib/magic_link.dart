@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:matam_supabase_auth_ui/supabase_auth_ui.dart';
 
 import 'constants.dart';
 

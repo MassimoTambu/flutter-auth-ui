@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  supabase_auth_ui:
+  matam_supabase_auth_ui:
     path: ../
 
 dev_dependencies:
