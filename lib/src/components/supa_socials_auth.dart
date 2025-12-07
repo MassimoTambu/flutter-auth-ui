@@ -121,7 +121,10 @@ class SupaSocialsAuth extends StatefulWidget {
     this.queryParams,
     this.oAuthButtonLabels,
     this.authScreenLaunchMode = LaunchMode.platformDefault,
-  });
+  }) : assert(
+         enableNativeFacebookAuth == false,
+         'Facebook native auth doesn\'t work in Supabase. See: https://github.com/supabase/auth/issues/1522',
+       );
 
   /// Defines native google provider to show in the form
   final NativeGoogleAuthConfig? nativeGoogleAuthConfig;
