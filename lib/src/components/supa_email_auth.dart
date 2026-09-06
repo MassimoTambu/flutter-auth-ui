@@ -175,6 +175,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.onError,
     this.onToggleSignIn,
     this.onToggleRecoverPassword,
+    this.onEmailChanged,
     this.metadataFields,
     this.extraMetadata,
     this.isInitiallySigningIn = true,
@@ -231,6 +232,9 @@ class SupaEmailAuth extends StatefulWidget {
 
   /// Callback for toggling between sign-in/ sign-up and password recovery
   final void Function(bool isRecoveringPassword)? onToggleRecoverPassword;
+
+  /// Callback for when the email field changes
+  final void Function(String email)? onEmailChanged;
 
   /// Set of additional fields to the signup form that will become
   /// part of the user_metadata
@@ -380,6 +384,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 label: Text(localization.enterEmail),
               ),
               controller: _emailController,
+              onChanged: (value) {
+                widget.onEmailChanged?.call(value);
+              },
               onFieldSubmitted: (_) {
                 if (_isRecoveringPassword &&
                     widget.enableAutomaticFormSubmission) {
